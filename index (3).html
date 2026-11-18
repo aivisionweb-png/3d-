@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MINDSPACE — Walk & Learn Prototype</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="hud">
+    <div class="brand"><span>MIND</span>SPACE <small>WALK & LEARN</small></div>
+    <div class="hud-right">
+      <div class="progress"><span>ROADMAP</span><b id="progressText">0 / 6 spaces</b><i><em id="progressBar"></em></i></div>
+      <button id="mapBtn">M</button>
+    </div>
+  </div>
+
+  <div id="crosshair">+</div>
+
+  <div id="hint">
+    <b>W A S D</b> walk &nbsp; • &nbsp; <b>Mouse</b> look &nbsp; • &nbsp; <b>E</b> interact
+  </div>
+
+  <div id="startScreen" class="screen">
+    <div class="start-card">
+      <div class="eyebrow">MINDSPACE / SPATIAL LEARNING</div>
+      <h1>Learn by<br><span>walking through it.</span></h1>
+      <p>Enter the campus. Walk from concept to concept. Enter a learning space, talk to the AI guide, practice, pass the checkpoint, and physically unlock the next space.</p>
+      <div class="goal">
+        <small>CURRENT GOAL</small>
+        <strong>Become a Python Developer</strong>
+        <span>6 learning spaces · adaptive roadmap</span>
+      </div>
+      <button id="startBtn">ENTER MINDSPACE →</button>
+      <div class="tip">Best experienced on desktop with a mouse + keyboard.</div>
+    </div>
+  </div>
+
+  <div id="spacePanel" class="panel hidden">
+    <button class="close" id="closePanel">×</button>
+    <div class="eyebrow" id="panelKicker">LEARNING SPACE</div>
+    <h2 id="panelTitle">Functions Lab</h2>
+    <p id="panelIntro"></p>
+    <div class="tabs">
+      <button class="tab active" data-tab="learn">LEARN</button>
+      <button class="tab" data-tab="explore">EXPLORE</button>
+      <button class="tab" data-tab="practice">PRACTICE</button>
+      <button class="tab" data-tab="ai">AI GUIDE</button>
+    </div>
+    <div id="tabContent"></div>
+  </div>
+
+  <div id="mapPanel" class="panel map-panel hidden">
+    <button class="close" id="closeMap">×</button>
+    <div class="eyebrow">YOUR LEARNING ROADMAP</div>
+    <h2>Campus map</h2>
+    <div id="mapList"></div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="reticleHint" class="hidden">Press <b>E</b> to enter</div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
