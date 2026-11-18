@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MINDSPACE — 3D Learning Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+<div class="brand"><b>MIND</b>SPACE</div>
+<div class="mono">3D LEARNING CAMPUS</div>
+<button onclick="resetCampus()">Reset view</button>
+</header>
+
+<section class="hero">
+<div>
+<div class="mono" style="color:var(--terra)">SPATIAL LEARNING / PYTHON DEVELOPER</div>
+<h1>Walk through<br>your roadmap.</h1>
+<p>The roadmap is no longer a list. Every skill becomes a physical place. Explore buildings, follow prerequisites, enter labs, practice concepts, and unlock what's next.</p>
+</div>
+<div class="controls">
+<button class="active" onclick="setMode(this,'orbit')">Orbit</button>
+<button onclick="setMode(this,'walk')">Walk</button>
+<button onclick="focusBuilding('Functions Lab')">Functions</button>
+<button onclick="focusBuilding('Project Lab')">Project Lab</button>
+</div>
+</section>
+
+<div class="campus-wrap">
+<div class="campus" id="campus">
+<div class="sky"></div><div class="sun"></div><div class="ground"></div><div class="grid"></div>
+<div class="campus-content" id="scene">
+<div class="path p1"></div><div class="path p2"></div><div class="path p3"></div><div class="path p4"></div><div class="plaza"></div>
+<div class="sign s1">CENTRAL PLAZA</div><div class="sign s2">PREREQUISITE PATH</div><div class="sign s3">PROJECT DISTRICT</div>
+<div class="tree t1"></div><div class="tree t2"></div><div class="tree t3"></div><div class="tree t4"></div><div class="tree t5"></div>
+<div class="building b1" onclick="openBuilding('Programming Fundamentals','Variables · Data Types · Operators · Input / Output','MASTERED · 86%')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>Fundamentals</h3><p>Start here. The foundation of your Python journey.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="building b2" onclick="openBuilding('Control Flow','Conditions · Loops · Error Handling','MASTERED · 82%')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>Control Flow</h3><p>Decision making and repetition as an interactive mission.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="building b3" onclick="openBuilding('Functions Lab','Parameters · Return values · Scope · Reusable logic','CURRENT · 60% MASTERY')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>Functions Lab</h3><p>Your current learning space. Application needs practice.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="building b4" onclick="openBuilding('Data Structures Library','Lists · Tuples · Dictionaries · Sets','LOCKED · COMPLETE FUNCTIONS')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>Data Library</h3><p>Unlock after the Functions checkpoint.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="building b5" onclick="openBuilding('AI Tutor Tower','Contextual explanations · Roadmap chat · Recommendations','ALWAYS AVAILABLE')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>AI Tutor</h3><p>Ask why, what next, or how to apply what you learned.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="building b6" onclick="openBuilding('Project Lab','Expense Tracker · Quiz App · API Project','BUILD · 3 PROJECTS')"><div class="bld-roof"></div><div class="bld-side"></div><div class="bld-front"><h3>Project Lab</h3><p>Turn knowledge into something real. Build your first project.</p><div class="windows"><i></i><i></i><i></i><i></i></div></div></div>
+<div class="avatar" id="avatar"></div>
+</div>
+<div class="hud">
+<div class="hud-card"><b>PYTHON CAMPUS</b><small>Roadmap progress · 42% · Current: Functions Lab</small></div>
+<div class="legend"><span>● COMPLETED</span><span>● CURRENT</span><span>● LOCKED</span><span>● BUILD</span></div>
+</div>
+<div class="tooltip" id="tooltip"><h4 id="tipTitle"></h4><p id="tipText"></p></div>
+</div>
+</div>
+
+<div class="overlay" id="modal">
+<div class="panel"><button class="close" onclick="closeModal()">×</button><div class="mono" style="color:var(--terra)">LEARNING SPACE</div><h2 id="modalTitle"></h2><p id="modalDesc"></p><div class="mission">
+<button onclick="action('learn')"><b>Learn</b><span>Concept explanation</span></button>
+<button onclick="action('explore')"><b>Explore</b><span>Interactive 3D demo</span></button>
+<button onclick="action('practice')"><b>Practice</b><span>Quick checkpoint</span></button>
+<button onclick="action('build')"><b>Build</b><span>Mini project</span></button>
+<button onclick="action('ask')"><b>Ask AI</b><span>Contextual tutor</span></button>
+<button onclick="action('next')"><b>What's next?</b><span>AI recommendation</span></button>
+</div></div>
+</div>
+
+<script>
+const campus=document.getElementById('campus'),scene=document.getElementById('scene'),avatar=document.getElementById('avatar');
+let mode='orbit',drag=false,lastX=0,lastY=0,rx=0,ry=0;
+function setMode(btn,m){document.querySelectorAll('.controls button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');mode=m;toast(m==='walk'?'Walk mode: click a destination building.':'Orbit mode: drag the campus to look around.')}
+campus.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;lastY=e.clientY;campus.setPointerCapture(e.pointerId)});
+campus.addEventListener('pointerup',()=>drag=false);
+campus.addEventListener('pointermove',e=>{
+ if(!drag||mode!=='orbit')return;
+ const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;
+ ry=Math.max(-13,Math.min(13,ry+dx*.035));rx=Math.max(-8,Math.min(8,rx-dy*.025));
+ scene.style.transform=`perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`;
+});
+function resetCampus(){rx=ry=0;scene.style.transform='';toast('Campus view reset')}
+function openBuilding(title,desc,status){
+ if(mode==='walk'){avatar.style.left='50%';avatar.style.top='50%';avatar.classList.remove('walk');void avatar.offsetWidth;avatar.classList.add('walk')}
+ document.getElementById('modalTitle').textContent=title;
+ document.getElementById('modalDesc').textContent=desc+' — '+status+'.';
+ document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function focusBuilding(name){
+ toast('Navigating to '+name+'…');
+ const map={'Functions Lab':['63%','30%'],'Project Lab':['43%','72%']};
+ const p=map[name]; if(p){avatar.style.left=p[0];avatar.style.top=p[1];avatar.classList.remove('walk');void avatar.offsetWidth;avatar.classList.add('walk')}
+}
+function action(type){
+ const msg={learn:'Learning room opened — concept briefing ready.',explore:'Interactive concept objects activated.',practice:'Checkpoint opened — mastery will update from your result.',build:'Project mission started — prerequisites checked.',ask:'AI Tutor: “I know you are currently in this learning space.”',next:'AI recommends: finish the Functions mini-project before Data Structures.'};
+ closeModal();toast(msg[type])
+}
+function toast(t){
+ let x=document.getElementById('toast');if(!x){x=document.createElement('div');x.id='toast';x.style.cssText='position:fixed;right:22px;bottom:22px;background:#fffdf8;border:1px solid #c8bead;border-radius:11px;padding:13px 16px;box-shadow:0 15px 40px rgba(40,35,29,.18);z-index:100;font:12px Manrope';document.body.appendChild(x)}
+ x.textContent=t;x.style.opacity=1;clearTimeout(window.tt);window.tt=setTimeout(()=>x.style.opacity=0,2400)
+}
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
